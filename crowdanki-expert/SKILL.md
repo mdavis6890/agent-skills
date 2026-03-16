@@ -16,12 +16,14 @@ CrowdAnki uses a strictly typed JSON structure. Every major object must have a `
 - `NoteModel` (contains the card template and field definitions)
 - `DeckConfig`
 
-### 2. Stable Updates via UUIDs
-To prevent duplicate cards when re-importing an updated deck, you must use stable UUIDs:
-- **Hardcode** `crowdanki_uuid` for the `Deck`, `NoteModel`, and `DeckConfig`.
+### 2. Stable Updates via UUIDs and GUIDs
+To prevent duplicate cards when re-importing an updated deck, you must use stable, unique identifiers for both CrowdAnki and Anki itself.
+
+- **Hardcode** `crowdanki_uuid` for the `Deck`, `NoteModel`, and `DeckConfig`. This is for CrowdAnki's internal tracking.
 - **Note-Level UUIDs**: Each note must have a `crowdanki_uuid` that is **stored in your source data**.
   - **Do NOT** hash the `Front` field of the card (e.g., using `uuid.uuid5`). If you fix a typo or reword the card's front, the UUID will change, and CrowdAnki will create a duplicate.
   - **Instead**, generate a random UUID once for each card and keep it in your script or data file forever. This ensures the card stays stable even if its content is completely rewritten.
+- **Anki's Note GUID**: Each note **must** also have a `guid` field. This is the identifier Anki uses internally. Without a stable `guid`, Anki will generate a random one on every import, leading to duplicate cards. A best practice is to derive the `guid` from the `crowdanki_uuid` (e.g., by taking the first 10 characters).
 
 ### 3. Required Fields
 Missing fields can cause silent failures or explicit errors during import:
@@ -42,6 +44,9 @@ The "Import from GitHub" feature in the CrowdAnki add-on has specific expectatio
 - The main JSON file **must** be located in the root directory of the repository.
 - The JSON file **must** be named exactly the same as the repository (e.g., a repository named `my-anki-deck` must have a `my-anki-deck.json` file in the root).
 - If these conditions are not met, the import will fail with an error indicating the file was not found.
+
+### 7. Flexible Deck Hierarchy
+To allow a deck to be placed as a subdeck in Anki without being moved back to the top level on re-import, add the `"is_subdeck": true` property to the main `Deck` object in the JSON file. This tells Anki to respect the deck's current location, whether it's at the top level or nested under another deck.
 
 ## Workflow
 

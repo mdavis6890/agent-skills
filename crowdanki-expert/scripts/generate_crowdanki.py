@@ -25,6 +25,7 @@ def generate_crowdanki_json(deck_name, cards, deck_uuid=None, model_uuid=None, c
         notes.append({
             "__type__": "Note",
             "crowdanki_uuid": card_uuid,
+            "guid": card_uuid[:10],
             "fields": [front, back, category, current_date],
             "note_model_uuid": model_uuid,
             "tags": tags
@@ -34,6 +35,7 @@ def generate_crowdanki_json(deck_name, cards, deck_uuid=None, model_uuid=None, c
         "__type__": "Deck",
         "children": [],
         "crowdanki_uuid": deck_uuid,
+        "is_subdeck": True,
         "deck_configurations": [
             {
                 "__type__": "DeckConfig",
