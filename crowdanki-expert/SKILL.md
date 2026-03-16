@@ -37,6 +37,12 @@ For CrowdAnki to recognize a folder for import:
 - **SVGs**: Small SVGs can be embedded directly into fields as HTML string literals (e.g., `'<svg>...</svg>'`). This is excellent for musical notation or mathematical symbols.
 - **Unicode**: Use standard Unicode symbols where possible (e.g., `𝄞`, `𝄢`).
 
+### 6. GitHub Import Requirements
+The "Import from GitHub" feature in the CrowdAnki add-on has specific expectations for the repository structure:
+- The main JSON file **must** be located in the root directory of the repository.
+- The JSON file **must** be named exactly the same as the repository (e.g., a repository named `my-anki-deck` must have a `my-anki-deck.json` file in the root).
+- If these conditions are not met, the import will fail with an error indicating the file was not found.
+
 ## Workflow
 
 1. **Initialize UUIDs**: Generate 3 random UUIDs for the Deck, Model, and Config. Save these in your generation script.
